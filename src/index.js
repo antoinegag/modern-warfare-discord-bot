@@ -66,7 +66,6 @@ const displayStats = async (params, msg) => {
     return;
   }
 
-  console.log(playerName);
   const stats = await fetchPlayerStats(playerName);
 
   if (!stats) {
@@ -93,7 +92,8 @@ const displayStats = async (params, msg) => {
         value: lifetime.bestKills,
         inline: true
       },
-      { name: "Best killstreak", value: lifetime.bestKillStreak, inline: true }
+      { name: "Best killstreak", value: lifetime.bestKillStreak, inline: true },
+      { name: "Most deaths in a game", value: lifetime.recordDeathsInAMatch }
     );
 
   if (playerName.startsWith("Poke1650")) {
