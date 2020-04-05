@@ -12,6 +12,7 @@ Simple Discord bot to query player stats on Modern Warfare
 
 ```
 DISCORD_BOT_TOKEN=your token
+PREFIX=command prefix (default !mw)
 ```
 
 - Run `yarn` and `yarn setup` to install the libraries and setup the database

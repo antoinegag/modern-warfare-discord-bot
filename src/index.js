@@ -1,4 +1,7 @@
 require("dotenv").config();
+
+const prefix = process.env.PREFIX || "!mw";
+
 const fetch = require("node-fetch");
 
 const fetchPlayerStats = async name => {
@@ -33,7 +36,7 @@ const client = new Discord.Client();
 const linkPlayer = async (params, msg) => {
   if (params.length != 1) {
     msg.reply(
-      "You need to specify your BattleNet name\nExample: `!mw link Poke1650#1284`"
+      `You need to specify your BattleNet name\nExample: \`${prefix} link Poke1650#1284\``
     );
   } else {
     const playerName = params[0];
@@ -61,7 +64,7 @@ const displayStats = async (params, msg) => {
 
   if (!playerName) {
     msg.reply(
-      "No player name linked to your account\nUse `!mw link YourName#Numbers`"
+      `No player name linked to your account\nUse \`${prefix} link YourName#Numbers\``
     );
     return;
   }
@@ -112,7 +115,7 @@ client.on("ready", () => {
 });
 
 client.on("message", msg => {
-  if (msg.content.startsWith("!mw") && !msg.author.bot) {
+  if (msg.content.startsWith(prefix) && !msg.author.bot) {
     const params = msg.content.split(" ");
     params.shift(); // Remove prefix
 
@@ -123,7 +126,9 @@ client.on("message", msg => {
     if (command) {
       command(params, msg);
     } else {
-      msg.reply(`No command found \`${key}\``);
+      msg.reply(
+        `No such command.\nCommands: ${Object.keys(commands).join(", ")}`
+      );
     }
   }
 });
