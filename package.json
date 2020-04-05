@@ -1,0 +1,22 @@
+{
+  "name": "mw-bot",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "start": "yarn nodemon src/index.js",
+    "setup": "yarn install && yarn db",
+    "db": "yarn sequelize-cli db:migrate && yarn sequelize-cli db:seed:all"
+  },
+  "dependencies": {
+    "discord.js": "^12.1.1",
+    "dotenv": "^8.2.0",
+    "node-fetch": "^2.6.0",
+    "sequelize": "^5.21.6",
+    "sequelize-cli": "^5.5.1",
+    "sqlite3": "^4.1.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.2"
+  }
+}
