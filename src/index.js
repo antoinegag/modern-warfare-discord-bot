@@ -4,7 +4,7 @@ const prefix = process.env.PREFIX || "!mw";
 
 const fetch = require("node-fetch");
 
-const fetchPlayerStats = async name => {
+const fetchPlayerStats = async (name) => {
   const url = `https://my.callofduty.com/api/papi-client/stats/cod/v1/title/mw/platform/battle/gamer/${encodeURIComponent(
     name
   )}/profile/type/mp`;
@@ -22,9 +22,9 @@ const fetchPlayerStats = async name => {
 
 const Player = require("../models").Player;
 
-const findPlayer = async discordId => {
+const findPlayer = async (discordId) => {
   const player = await Player.findOne({
-    where: { discordId }
+    where: { discordId },
   });
 
   return player;
@@ -44,7 +44,7 @@ const linkPlayer = async (params, msg) => {
     if (stats) {
       await Player.create({
         discordId: msg.author.id,
-        battlenetName: playerName
+        battlenetName: playerName,
       });
       msg.reply(`Linked your Discord account to user \`${playerName}\``);
     } else {
@@ -84,18 +84,38 @@ const displayStats = async (params, msg) => {
     .setTitle(playerName)
     .addFields(
       { name: "Level", value: data.level, inline: true },
+      {
+        name: "Time played",
+        value: `${(lifetime.timePlayedTotal / 3600).toFixed(2)}h`,
+        inline: true,
+      },
+      {
+        name: "Best KD",
+        value: lifetime.bestKD,
+        inline: true,
+      },
       { name: "K/D", value: lifetime.kdRatio.toFixed(2), inline: true },
       { name: "W/L", value: lifetime.wlRatio.toFixed(2), inline: true },
       {
-        name: "Time played",
-        value: `${(lifetime.timePlayedTotal / 3600).toFixed(2)}h`
+        name: "Acc",
+        value: `${lifetime.accuracy.toFixed(2)}%`,
+        inline: true,
       },
+      { name: "Kills", value: lifetime.kills, inline: true },
       {
-        name: "Best kills",
-        value: lifetime.bestKills,
-        inline: true
+        name: "Headshots",
+        value: `${lifetime.headshots} (${(
+          (lifetime.headshots / lifetime.kills) *
+          100
+        ).toFixed(2)}%)`,
+        inline: true,
       },
       { name: "Best killstreak", value: lifetime.bestKillStreak, inline: true },
+      {
+        name: "Most kills in a game",
+        value: lifetime.bestKills,
+        inline: true,
+      },
       { name: "Most deaths in a game", value: lifetime.recordDeathsInAMatch }
     );
 
@@ -107,14 +127,14 @@ const displayStats = async (params, msg) => {
 
 const commands = {
   link: linkPlayer,
-  stats: displayStats
+  stats: displayStats,
 };
 
 client.on("ready", () => {
   console.log(`Logged in as ${client.user.tag}!`);
 });
 
-client.on("message", msg => {
+client.on("message", (msg) => {
   if (msg.content.startsWith(prefix) && !msg.author.bot) {
     const params = msg.content.split(" ");
     params.shift(); // Remove prefix
